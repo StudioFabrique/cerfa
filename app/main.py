@@ -10,6 +10,7 @@ from .routes.routes import router as my_router
 app = FastAPI()
 
 origins = [
+    "http://localhost:5174",
     "http://localhost:5173"
 ]
 

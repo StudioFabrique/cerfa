@@ -134,7 +134,16 @@ async def get_contracts_Employeur(current_user: dict = Depends(get_current_user)
     employeur_id = result.scalars().first()
 
     if(employeur_id):
-        result2 = await db.execute(select(Contrat).filter(Contrat.employeur_id == employeur_id))
+        result2 = await db.execute(
+        select(
+        Apprenant.nom_usage,
+        Apprenant.prenom,
+        Apprenant.date_naissance,
+        Employeur.nom_entreprise,
+        TypeContrat.type_contrat,
+        Contrat.id,
+        Contrat.signature_employeur
+        ).join(Contrat, Apprenant.id == Contrat.apprenti_id).filter(Contrat.employeur_id == employeur_id))
     contracts = result2.scalars().all()
     return contracts
 
