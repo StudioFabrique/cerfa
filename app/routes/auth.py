@@ -29,7 +29,8 @@ async def authenticate(email: Annotated[str, Form()], password: Annotated[str, F
     user_role = str(user.role_id)
     token = token_service.generate_token(user_id_str, user_role, rememberMe)
     response_data = {"access": token,
-                     "role": user.role_id}
+                     "role": user.role_id,
+                     "id": user.id}
     return JSONResponse(content=response_data)
 
 app.include_router(router)

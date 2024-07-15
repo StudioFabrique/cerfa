@@ -31,11 +31,13 @@ async def get_nombre_signe_cfa(current_user: dict = Depends(get_current_user), d
     }
     return response_data
 
-@router.get("/Employeur")
-async def get_nombre_signe_employeur(current_user: dict = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Contrat.signature_employeur).where(Contrat.signature_employeur != None))
+@router.get("/employeur/{id}")
+async def get_nombre_signe_employeur(id: int, current_user: dict = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    Employeur = await db.execute(select(User.employeur_id).filter(User.id == id ))
+    employeur_id = Employeur.scalars().first()
+    result = await db.execute(select(Contrat.signature_employeur).where(Contrat.signature_employeur != None).filter(Contrat.employeur_id == employeur_id ))
     all_non_null = result.scalars().all()
-    result2 = await db.execute(select(Contrat.signature_employeur).where(Contrat.signature_employeur == None))
+    result2 = await db.execute(select(Contrat.signature_employeur).where(Contrat.signature_employeur == None).filter(Contrat.employeur_id == employeur_id))
     all_null = result2.scalars().all()
     int_count_null = len(all_null)
     int_count_non_null = len(all_non_null)
