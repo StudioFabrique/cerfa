@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routes import formulaire_app1, formulaire_entre1, formulaire_cfa1, resultat, auth, accueil, pageheadercerfa
+from .routes import formulaire_app1, formulaire_entre1, formulaire_cfa1, resultat, auth, accueil, pageheadercerfa, edit
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from .BD.database import engine, Base
@@ -27,6 +27,8 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 app.include_router(my_router)
+
+app.include_router(edit.router)
 
 app.include_router(pageheadercerfa.router)
 
