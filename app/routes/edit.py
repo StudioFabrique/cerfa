@@ -124,7 +124,7 @@ async def get_user(id: int, current_user: dict = Depends(get_current_user), db: 
 
     return response_data
 
-router.get("/get/employeur/{id}")
+@router.get("/get/employeur/{id}")
 async def get_employeur(id: int, current_user: dict = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(
@@ -186,6 +186,24 @@ async def get_cfa(current_user: dict = Depends(get_current_user), db: AsyncSessi
     }
 
     return response_data
+
+@router.put("/employeur/{id}")
+async def update_employeur(id: int, employeur_update: EmployeurUpdate, current_user: dict = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Employeur).filter(Employeur.id == id))
+    employeur = result.scalars().first()
+    
+    if not employeur:
+        raise HTTPException(status_code=404, detail="Employeur not found")
+    
+    update_data = employeur_update.model_dump(exclude_unset=True)
+    
+    for key, value in update_data.items():
+        setattr(employeur, key, value)
+    
+    await db.commit()
+    await db.refresh(employeur)
+    
+    return {"message": "employeur updated successfully", "user": employeur}
 
 @router.put("/user/{id}")
 async def update_user(id: int, user_update: UserUpdate, current_user: dict = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
