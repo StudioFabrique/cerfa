@@ -92,7 +92,7 @@ class Employeur(Base):
     code_postal = Column(String)
     commune = Column(String)
     code_IDCC = Column(String)
-    effectif = Column(Integer)
+    effectif = Column(String)
     code_activite_NAF = Column(String)
     employeur_specifique = Column(String)
     type_employeur = Column(String)
